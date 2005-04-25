@@ -11,7 +11,6 @@ viopen.c \
 viopendrm.c \
 viread.c \
 visetattr.c \
-vistatusdesc.c \
 viwrite.c \
 common.h
 
