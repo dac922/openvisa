@@ -6,9 +6,7 @@
 
 #include "common.h"
 
-extern InstrRecord *InstrList;
-
-extern int InstrsCount;
+extern ResourceRecord *ResourceList;;
 extern int SessionsCount;
 extern ViBoolean DefaultRMFirst;
 
@@ -37,17 +35,20 @@ void AsrlInit(Instr* a,ViString name)
 
 
 
-ViStatus OpenSerialPort(ViString SerialPort,int index)
+ViStatus OpenSerialPort(ViString SerialPort,ViSession vi)
 {
 int fd;
 struct termios oldtio,newtio;
+ResourceRecord *r;
 /* 
 Open modem device for reading and writing and not as controlling tty
 because we don't want to get killed if linenoise sends CTRL-C.
 */
 	fd = open(SerialPort, O_RDWR | O_NOCTTY ); 
     if (fd <0) {perror(SerialPort);return 1;}
-    InstrList[index].fd=fd;    
+    //falta comprobar error de no encontrar r
+	r=LookForRessource(vi);
+	r->fd=fd;    
     tcgetattr(fd,&oldtio); /* save current serial port settings */
     bzero(&newtio, sizeof(newtio)); /* clear struct for new port settings */
         
@@ -57,7 +58,7 @@ because we don't want to get killed if linenoise sends CTRL-C.
 	
 	
 	//baud rate
-	switch (InstrList[index].i->vi_attr_ASRL_BAUD)
+	switch (r->i->vi_attr_ASRL_BAUD)
 	{
 		case 0:
 			cfsetispeed(&newtio,B0);
@@ -144,7 +145,7 @@ because we don't want to get killed if linenoise sends CTRL-C.
 	
 	// size bits
 	newtio.c_cflag &= ~CSIZE; /* Mask the character size bits */
-    switch (InstrList[index].i->vi_attr_ASRL_DATA_BITS)
+    switch (r->i->vi_attr_ASRL_DATA_BITS)
 	{
 		case 5:
 			newtio.c_cflag |= CS5;
@@ -164,7 +165,7 @@ because we don't want to get killed if linenoise sends CTRL-C.
 	}
 				
 	// parity
-	switch (InstrList[index].i->vi_attr_ASRL_PARITY)
+	switch (r->i->vi_attr_ASRL_PARITY)
 	{
 		case VI_ASRL_PAR_NONE:
 			newtio.c_cflag &= ~PARENB;
@@ -191,7 +192,7 @@ because we don't want to get killed if linenoise sends CTRL-C.
 	}
 	
 	// stop bits 
-	switch (InstrList[index].i->vi_attr_ASRL_STOP_BITS)
+	switch (r->i->vi_attr_ASRL_STOP_BITS)
 	{
 		case VI_ASRL_STOP_ONE:
 			newtio.c_cflag &= ~CSTOPB;
@@ -210,7 +211,7 @@ because we don't want to get killed if linenoise sends CTRL-C.
 	newtio.c_cflag &= ~CRTSCTS;
 	//desactivar control software
 	newtio.c_iflag &= ~(IXON | IXOFF | IXANY);
-	switch (InstrList[index].i->vi_attr_ASRL_FLOW_CNTRL)
+	switch (r->i->vi_attr_ASRL_FLOW_CNTRL)
 	{
 		case VI_ASRL_FLOW_NONE:
 			break; //en este caso no hacemos nada , lo hemos hecho arriba
@@ -234,8 +235,8 @@ because we don't want to get killed if linenoise sends CTRL-C.
 	
 	//vi_attr_asrl_xon_char
 	//vi_attr_asrl_xoff_char
-	newtio.c_cc[VSTART]   = InstrList[index].i->vi_attr_ASRL_XON_CHAR;     /* por defecto  Ctrl-q */ 
-    newtio.c_cc[VSTOP]    = InstrList[index].i->vi_attr_ASRL_XOFF_CHAR;;     /* por defecto Ctrl-s */
+	newtio.c_cc[VSTART]   = r->i->vi_attr_ASRL_XON_CHAR;     /* por defecto  Ctrl-q */ 
+    newtio.c_cc[VSTOP]    = r->i->vi_attr_ASRL_XOFF_CHAR;;     /* por defecto Ctrl-s */
 	
 	
 	//Missing code for:

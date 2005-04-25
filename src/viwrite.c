@@ -1,32 +1,30 @@
 #include "visa.h"
 #include "common.h"
 
-extern InstrRecord *InstrList;
-
-extern int InstrsCount;
+extern ResourceRecord *ResourceList;;
 extern int SessionsCount;
 extern ViBoolean DefaultRMFirst;
+extern ResourceRecord* LookForRessource(ViSession );
 
 
 ViStatus viWrite(ViSession vi,ViBuf buf,ViUInt32 cnt,ViPUInt32 retCnt)
 {
 	ssize_t numbytes;
-	int i=0;
-	for(i=0;i<InstrsCount;i++) 
+	ResourceRecord *r;
+	
+	if(r=LookForRessource(vi)!=VI_NULL)
 	{
-		if (InstrList[i].vi==vi)
+		if (r->i->vi_attr_INTF_TYPE==VI_INTF_ASRL)
 		{
-			if (InstrList[i].i->vi_attr_INTF_TYPE==VI_INTF_ASRL)
-			{
-				numbytes= write(InstrList[i].fd,buf,cnt);			
-				*retCnt=numbytes;
-				if (numbytes==cnt) return VI_SUCCESS;
-				return VI_ERROR_BERR;	
-			}
-			return VI_ERROR_NSUP_OPER;
+			numbytes= write(r->fd,buf,cnt);			
+			*retCnt=numbytes;
+			if (numbytes==cnt) return VI_SUCCESS;
+			return VI_ERROR_BERR;	
 		}
-		
+		return VI_ERROR_NSUP_OPER;
+				
 	}
-	return VI_ERROR_INV_SESSION;
+	else
+		return VI_ERROR_INV_SESSION;
 	
 }

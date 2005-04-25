@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#define MAX_INSTRUMENTS 10
+
 
 #define MODEMDEVICE1 "/dev/ttyS1"
 
@@ -49,13 +49,23 @@ typedef struct
 		ViUInt8 vi_attr_ASRL_XON_CHAR;//0 to FFh
 		ViUInt8 vi_attr_ASRL_XOFF_CHAR;//0 to FFh
 	
+	//GPIB and GPIB-VXI Specific INSTR Resource Attributes
+		ViUInt16 vi_attr_GPIB_PRIMARY_ADDR;// RO Global  0 to 30 
+		ViUInt16 vi_attr_GPIB_SECONDARY_ADDR;// RO Global  0 to 31, VI_NO_SEC_ADDR 
+		ViBoolean vi_attr_GPIB_READDR_EN;// R/W Local  VI_TRUE VI_FALSE 
+		ViBoolean vi_attr_GPIB_UNADDR_EN;// R/W Local  VI_TRUE VI_FALSE 
+		ViInt16 vi_attr_GPIB_REN_STATE;// RO Global  VI_STATE_ASSERTED VI_STATE_UNASSERTED VI_STATE_UNKNOWN
+
+
 
 }Instr;
 
 
-typedef struct
+
+typedef struct Resource
 {
 	Instr *i;
 	ViSession vi;
 	int fd; //file descriptor of the instrument
-}InstrRecord;
+	struct Resource* Next;
+}ResourceRecord;

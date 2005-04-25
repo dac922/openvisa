@@ -6,34 +6,46 @@ int main()
 	ViSession v;
 	ViStatus status;
 	ViSession a;
+	char desc[50]="k2k2k2k2";
 
 	//little tests	
 	status=viOpenDefaultRM(&v);
-	printf("%dsesion abierta:%d\n",status,v);
+	viStatusDesc(0,status,desc);
+	printf("%s-sesion abierta:%d\n",desc,v);
 	
 	status=viOpen(v,"ASRL1",VI_LOAD_CONFIG,VI_NULL,&a);
-	printf("%dsesion abierta:%d\n",status,a);
+	viStatusDesc(0,status,desc);
+	printf("%s-sesion abierta:%d\n",desc,a);
 	
 	status=viOpen(v,"ASRL2",VI_LOAD_CONFIG,VI_NULL,&a);
-	printf("%dsesion abierta:%d\n",status,a);
+	viStatusDesc(0,status,desc);
+	printf("%s-sesion abierta:%d\n",desc,a);
+	
+	
 	status=viOpen(v,"ASRL1",VI_LOAD_CONFIG,VI_NULL,&a);
-	printf("%dsesion abierta:%d\n",status,a);
+	viStatusDesc(0,status,desc);
+	printf("%s-sesion abierta:%d\n",desc,a);
 	
 	
 	status=viSetAttribute(1,VI_ATTR_ASRL_PARITY,VI_ASRL_PAR_NONE);
-	printf("resultado:%d\n",status);
+	viStatusDesc(0,status,desc);
+	printf("%s-resultado:%d\n",desc,status);
 	
 	status=viSetAttribute(2,VI_ATTR_ASRL_PARITY,VI_ASRL_PAR_NONE);
-	printf("resultado:%d\n",status);
+	viStatusDesc(0,status,desc);
+	printf("%s-resultado:%d\n",desc,status);
 	
 	status=viSetAttribute(3,VI_ATTR_ASRL_PARITY,VI_ASRL_PAR_NONE);
-	printf("resultado:%d\n",status);
+	viStatusDesc(0,status,desc);
+	printf("%s-resultado:%d\n",desc,status);
 	
 		
 	
 	char nombre[20];
 	status=viGetAttribute(3,VI_ATTR_INTF_INST_NAME,nombre);
-	printf("%d: nombre:%s\n",status,nombre);
+	viStatusDesc(0,status,desc);
+	printf("%s: nombre:%s\n",desc,nombre);
 	
 	
-	return (0);}
+	return (0);
+}
