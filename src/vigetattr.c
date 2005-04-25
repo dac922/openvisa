@@ -14,16 +14,76 @@ ViString StringP;
 ViUInt16* UInt16P;
 ViUInt32* UInt32P;
 ViUInt8* UInt8P;
-ViBoolean* ViBoolP;
+ViBoolean* BooleanP;
+ViVersion* VersionP;
+ViAccessMode* AccessModeP;
+ViSession* SessionP;
 ResourceRecord* r=NULL;
 	
-	r=LookForRessource(vi);
+	r=LookForResource(vi);
 	if(r!=NULL)
 	{
 		printf("lo he encontrado!\n");
 		switch (attrName) 
 		{
-			
+				//Template Attributes
+			case VI_ATTR_RSRC_IMPL_VERSION:// RO Global  0h to FFFFFFFFh 
+			{
+				VersionP=(ViVersion *) attrValue;
+				*VersionP=r->i->vi_attr_RSRC_IMPL_VERSION;
+				return VI_SUCCESS;						
+			}
+	    	case VI_ATTR_RSRC_LOCK_STATE:// RO Global  VI_NO_LOCK VI_EXCLUSIVE_LOCK VI_SHARED_LOCK 
+			{
+				AccessModeP=(ViVersion *) attrValue;
+				*AccessModeP=r->i->vi_attr_RSRC_IMPL_VERSION;
+				return VI_SUCCESS;						
+			}
+			case VI_ATTR_RSRC_MANF_ID:// RO Global  0h to 3FFFh 
+			{
+				UInt16P=(ViUInt16 *) attrValue;
+				*UInt16P=r->i->vi_attr_RSRC_MANF_ID;
+				return VI_SUCCESS;
+			}	
+			case VI_ATTR_RSRC_MANF_NAME:// RO Global  N/A 
+			{
+				//aqui hay q hacer un string copy
+				//pa luego
+			}
+			case VI_ATTR_RSRC_NAME:// RO Global  N/A 
+			{
+				//aqui hay q hacer un string copy
+				//pa luego
+			}
+			case VI_ATTR_RSRC_SPEC_VERSION:// RO Global  00200200h 
+			{
+				VersionP=(ViVersion *) attrValue;
+				*VersionP=r->i->vi_attr_RSRC_SPEC_VERSION;
+				return VI_SUCCESS;						
+			}
+			case VI_ATTR_RM_SESSION:// RO Local  N/A 
+			{
+				SessionP=(ViSession *) attrValue;
+				*SessionP=r->i->vi_attr_RM_SESSION;
+				return VI_SUCCESS;						
+			}
+			case VI_ATTR_MAX_QUEUE_LENGTH:// R/W* Local  1h to FFFFFFFFh 
+			{
+				UInt32P=(ViUInt32 *) attrValue;
+				*UInt32P=r->i->vi_attr_MAX_QUEUE_LENGTH;
+				return VI_SUCCESS;			
+			}
+			case VI_ATTR_RSRC_CLASS:// RO Global  N/A 
+			{
+				//aqui hay q hacer un string copy
+				//pa luego
+			}
+			case VI_ATTR_USER_DATA:// R/W Local  **
+			{
+				//aqui hay q hacer un string copy
+				//pa luego
+			}
+		
 			//atributos generales
 			case VI_ATTR_INTF_NUM://(RO)//0 to FFFFh
 			{
@@ -58,14 +118,14 @@ ResourceRecord* r=NULL;
 			}
 			case VI_ATTR_SEND_END_EN://(R/W) //VI_TRUE VI_FALSE
 			{
-				ViBoolP=(ViBoolean *) attrValue;
-				*ViBoolP=r->i->vi_attr_SEND_END_EN;
+				BooleanP=(ViBoolean *) attrValue;
+				*BooleanP=r->i->vi_attr_SEND_END_EN;
 				return VI_SUCCESS;						
 			}
 			case VI_ATTR_SUPPRESS_END_EN://(R/W) //VI_TRUE VI_FALSE
 			{
-				ViBoolP=(ViBoolean *) attrValue;
-				*ViBoolP=r->i->vi_attr_SUPPRESS_END_EN;
+				BooleanP=(ViBoolean *) attrValue;
+				*BooleanP=r->i->vi_attr_SUPPRESS_END_EN;
 				return VI_SUCCESS;						
 			}
 			case VI_ATTR_TERMCHAR://(R/W) //0 to FFh
@@ -76,8 +136,8 @@ ResourceRecord* r=NULL;
 			}
 			case VI_ATTR_TERMCHAR_EN://(R/W) //VI_TRUE VI_FALSE
 			{
-				ViBoolP=(ViBoolean *) attrValue;
-				*ViBoolP=r->i->vi_attr_TERMCHAR_EN;
+				BooleanP=(ViBoolean *) attrValue;
+				*BooleanP=r->i->vi_attr_TERMCHAR_EN;
 				return VI_SUCCESS;						
 			}
 			case VI_ATTR_TMO_VALUE://(R/W) //VI_TMO_IMMEDIATE 1 to FFFFFFFEh VI_TMO_INFINITE
@@ -100,14 +160,14 @@ ResourceRecord* r=NULL;
 			}
 			case VI_ATTR_DMA_ALLOW_EN://(R/W) //VI_TRUE VI_FALSE
 			{
-				ViBoolP=(ViBoolean *) attrValue;
-				*ViBoolP=r->i->vi_attr_DMA_ALLOW_EN;
+				BooleanP=(ViBoolean *) attrValue;
+				*BooleanP=r->i->vi_attr_DMA_ALLOW_EN;
 				return VI_SUCCESS;						
 			}
 			case VI_ATTR_FILE_APPEND_EN://(R/W) //VI_TRUE VI_FALSE
 			{
-				ViBoolP=(ViBoolean *) attrValue;
-				*ViBoolP=r->i->vi_attr_FILE_APPEND_EN;
+				BooleanP=(ViBoolean *) attrValue;
+				*BooleanP=r->i->vi_attr_FILE_APPEND_EN;
 				return VI_SUCCESS;						
 			}
 			
@@ -329,15 +389,15 @@ ResourceRecord* r=NULL;
 			
 			case VI_ATTR_GPIB_READDR_EN:// R/W Local  VI_TRUE VI_FALSE 
 			{
-				ViBoolP=(ViBoolean *) attrValue;
-				*ViBoolP=r->i->vi_attr_GPIB_READDR_EN;
+				BooleanP=(ViBoolean *) attrValue;
+				*BooleanP=r->i->vi_attr_GPIB_READDR_EN;
 				return VI_SUCCESS;						
 			}
 
 			case VI_ATTR_GPIB_UNADDR_EN:// R/W Local  VI_TRUE VI_FALSE 
 			{
-				ViBoolP=(ViBoolean *) attrValue;
-				*ViBoolP=r->i->vi_attr_GPIB_UNADDR_EN;
+				BooleanP=(ViBoolean *) attrValue;
+				*BooleanP=r->i->vi_attr_GPIB_UNADDR_EN;
 				return VI_SUCCESS;						
 			}
 			case VI_ATTR_GPIB_REN_STATE:// RO Global  VI_STATE_ASSERTED VI_STATE_UNASSERTED VI_STATE_UNKNOWN

@@ -7,12 +7,26 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-
-
+//serial definitions
 #define MODEMDEVICE1 "/dev/ttyS1"
+#define FIRST_SERIAL '1'
+#define LAST_SERIAL '4'
 
 typedef struct
 {
+		//Template Attributes
+	    ViVersion vi_attr_RSRC_IMPL_VERSION;// RO Global  0h to FFFFFFFFh 
+		ViAccessMode vi_attr_RSRC_LOCK_STATE;// RO Global  VI_NO_LOCK VI_EXCLUSIVE_LOCK VI_SHARED_LOCK 
+		ViUInt16 vi_attr_RSRC_MANF_ID;// RO Global  0h to 3FFFh 
+		ViString vi_attr_RSRC_MANF_NAME;// RO Global  N/A 
+		ViRsrc vi_attr_RSRC_NAME;// RO Global  N/A 
+		ViVersion vi_attr_RSRC_SPEC_VERSION;// RO Global  00200200h 
+		ViSession vi_attr_RM_SESSION;// RO Local  N/A 
+		ViUInt32 vi_attr_MAX_QUEUE_LENGTH;// R/W* Local  1h to FFFFFFFFh 
+		ViString vi_attr_RSRC_CLASS;// RO Global  N/A 
+		ViAddr vi_attr_USER_DATA;// R/W Local  **
+	
+	
 	
 		//General attributes of INSTR Resource
 		ViUInt16 vi_attr_INTF_NUM;//0 to FFFFh
@@ -30,7 +44,7 @@ typedef struct
 		ViBoolean vi_attr_DMA_ALLOW_EN;//VI_TRUE VI_FALSE
 		ViBoolean vi_attr_FILE_APPEND_EN;//VI_TRUE VI_FALSE
 	
-	//ASRL Specific INSTR Resource Attributes
+		//ASRL Specific INSTR Resource Attributes
 		ViUInt32 vi_attr_ASRL_AVAIL_NUM;//0 to FFFFFFFFh
 		ViUInt32 vi_attr_ASRL_BAUD;//0 to FFFFFFFFh
 		ViUInt16 vi_attr_ASRL_DATA_BITS;//5 to 8
@@ -49,7 +63,7 @@ typedef struct
 		ViUInt8 vi_attr_ASRL_XON_CHAR;//0 to FFh
 		ViUInt8 vi_attr_ASRL_XOFF_CHAR;//0 to FFh
 	
-	//GPIB and GPIB-VXI Specific INSTR Resource Attributes
+		//GPIB and GPIB-VXI Specific INSTR Resource Attributes
 		ViUInt16 vi_attr_GPIB_PRIMARY_ADDR;// RO Global  0 to 30 
 		ViUInt16 vi_attr_GPIB_SECONDARY_ADDR;// RO Global  0 to 31, VI_NO_SEC_ADDR 
 		ViBoolean vi_attr_GPIB_READDR_EN;// R/W Local  VI_TRUE VI_FALSE 

@@ -12,7 +12,7 @@ ViStatus viRead(ViSession vi,ViPBuf buf,ViUInt32 cnt,ViPUInt32 retcnt)
 	int i=0;
 	ResourceRecord *r;
 	
-	if(r=LookForRessource(vi)!=VI_NULL)
+	if(r=LookForResource(vi)!=VI_NULL)
 	{
 		if (r->i->vi_attr_INTF_TYPE==VI_INTF_ASRL)
 		{

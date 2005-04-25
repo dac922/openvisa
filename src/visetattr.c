@@ -11,12 +11,65 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 
 	ResourceRecord *r=NULL;
 	
-	r=LookForRessource(vi);
+	r=LookForResource(vi);
 	if(r!=NULL)
 	{
 		switch (attrName) 
 		{
-			//atributos generales
+			//Template Attributes
+			case VI_ATTR_RSRC_IMPL_VERSION:// RO Global  0h to FFFFFFFFh 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+	    	case VI_ATTR_RSRC_LOCK_STATE:// RO Global  VI_NO_LOCK VI_EXCLUSIVE_LOCK VI_SHARED_LOCK 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_RSRC_MANF_ID:// RO Global  0h to 3FFFh 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_RSRC_MANF_NAME:// RO Global  N/A 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_RSRC_NAME:// RO Global  N/A 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_RSRC_SPEC_VERSION:// RO Global  00200200h 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_RM_SESSION:// RO Local  N/A 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_MAX_QUEUE_LENGTH:// R/W* Local  1h to FFFFFFFFh 
+			{
+				//read only for the moment:will have to change
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_RSRC_CLASS:// RO Global  N/A 
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			case VI_ATTR_USER_DATA:// R/W Local  **
+			{
+				return VI_ERROR_ATTR_READONLY;
+				break;
+			}
+			
+			//atributos generales INSTR
 			case VI_ATTR_INTF_NUM://(RO)//0 to FFFFh
 			{
 				return VI_ERROR_ATTR_READONLY;
@@ -132,6 +185,7 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 				if(r->i->vi_attr_INTF_TYPE==VI_INTF_ASRL)
 				{
 					r->i->vi_attr_ASRL_BAUD=(ViUInt32) attrValue;
+					SetSerialBaudRate(r->fd,r->i->vi_attr_ASRL_BAUD);
 					return(VI_SUCCESS);
 				}
 				else
@@ -147,6 +201,7 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 					if ((attrValue>=5)&&(attrValue<=8))
 					{
 						r->i->vi_attr_ASRL_DATA_BITS=(ViUInt16) attrValue;
+						SetSerialDataBits(r->fd,r->i->vi_attr_ASRL_DATA_BITS);
 						return(VI_SUCCESS);
 					}
 					else 
@@ -165,6 +220,7 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 					if ((attrValue==VI_ASRL_PAR_NONE)||(attrValue==VI_ASRL_PAR_ODD)||(attrValue==VI_ASRL_PAR_EVEN)||(attrValue==VI_ASRL_PAR_MARK)||(attrValue==VI_ASRL_PAR_SPACE))
 					{
 						r->i->vi_attr_ASRL_PARITY=(ViUInt16) attrValue;
+						SetSerialParity(r->fd,r->i->vi_attr_ASRL_PARITY);
 						return(VI_SUCCESS);
 					}
 					else 
@@ -183,6 +239,7 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 					if ((attrValue==VI_ASRL_STOP_ONE)||(attrValue==VI_ASRL_STOP_ONE5)||(attrValue== VI_ASRL_STOP_TWO))
 					{
 						r->i->vi_attr_ASRL_STOP_BITS=(ViUInt16) attrValue;
+						SetSerialStopBits(r->fd,r->i->vi_attr_ASRL_STOP_BITS);
 						return(VI_SUCCESS);
 					}
 					else 
@@ -201,6 +258,7 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 					if ((attrValue==VI_ASRL_FLOW_NONE)||(attrValue==VI_ASRL_FLOW_XON_XOFF)||(attrValue==VI_ASRL_FLOW_RTS_CTS)||(attrValue==VI_ASRL_FLOW_DTR_DSR))
 					{
 						r->i->vi_attr_ASRL_FLOW_CNTRL=(ViUInt16) attrValue;
+						SetSerialFlowControl(r->fd,r->i->vi_attr_ASRL_FLOW_CNTRL);
 						return(VI_SUCCESS);
 					}
 					else 
@@ -337,6 +395,7 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 					if ((attrValue>=0)&&(attrValue<=0xFF))
 					{
 						r->i->vi_attr_ASRL_XON_CHAR=(ViUInt8) attrValue;
+						SetSerialXonChar(r->fd,r->i->vi_attr_ASRL_XON_CHAR);
 						return(VI_SUCCESS);
 					}
 					else 
@@ -355,6 +414,7 @@ ViStatus viSetAttribute (ViObject vi, ViAttr attrName, ViAttrState attrValue) //
 					if ((attrValue>=0)&&(attrValue<=0xFF))
 					{
 						r->i->vi_attr_ASRL_XOFF_CHAR=(ViUInt8) attrValue;
+						SetSerialXoffChar(r->fd,r->i->vi_attr_ASRL_XOFF_CHAR);
 						return(VI_SUCCESS);
 					}
 					else 

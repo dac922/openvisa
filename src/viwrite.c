@@ -12,7 +12,7 @@ ViStatus viWrite(ViSession vi,ViBuf buf,ViUInt32 cnt,ViPUInt32 retCnt)
 	ssize_t numbytes;
 	ResourceRecord *r;
 	
-	if(r=LookForRessource(vi)!=VI_NULL)
+	if(r=LookForResource(vi)!=VI_NULL)
 	{
 		if (r->i->vi_attr_INTF_TYPE==VI_INTF_ASRL)
 		{
