@@ -137,7 +137,7 @@ DIST_COMMON = README $(srcdir)/Makefile.in $(srcdir)/configure AUTHORS \
 	COPYING ChangeLog INSTALL Makefile.am NEWS aclocal.m4 \
 	config/config.guess config/config.sub config/depcomp \
 	config/install-sh config/ltmain.sh config/missing \
-	config/mkinstalldirs configure configure.ac
+	config/mkinstalldirs configure.ac
 DIST_SUBDIRS = $(SUBDIRS)
 all: all-recursive
 
