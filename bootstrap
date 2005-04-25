@@ -1,0 +1,7 @@
+#! /bin/bash
+
+echo "Running autoheader:" ; autoheader \
+&& echo "Running libtoolize:" ; libtoolize --copy --force\
+&& echo "Running aclocal:" ; aclocal -I m4 \
+&& echo "Running automake:" ; automake --add-missing --copy \
+&& echo "Running autoconf:" ; autoconf
